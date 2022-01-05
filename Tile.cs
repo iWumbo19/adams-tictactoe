@@ -13,6 +13,10 @@ namespace SassyTicTacToe
         {
             TileType = tile.TileType;
         }
+        internal Tile(TileType type)
+        {
+            TileType = type;
+        }
     }
 
     enum TileType

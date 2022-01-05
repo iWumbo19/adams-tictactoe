@@ -5,8 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SassyTicTacToe"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="509" Width="800">
+    <Grid Margin="0,0,0,-6">
+        <Image x:Name="GameGridImage" HorizontalAlignment="Left" Height="411" Margin="10,10,0,0" VerticalAlignment="Top" Width="411" Source="/Resources/GameGrid.png"/>
+        <Image x:Name="Square0" HorizontalAlignment="Left" Height="129" Margin="10,10,0,0" VerticalAlignment="Top" Width="129" Tag="0" IsEnabled="True" MouseLeftButtonDown="SquareClicked"/>
+        <Image x:Name="Square1" HorizontalAlignment="Left" Height="125" Margin="152,16,0,0" VerticalAlignment="Top" Width="125" Tag="1" IsEnabled="True" MouseLeftButtonDown="SquareClicked"/>
+        <Image x:Name="Square2" HorizontalAlignment="Left" Height="125" Margin="288,16,0,0" VerticalAlignment="Top" Width="125" Tag="2" IsEnabled="True" MouseLeftButtonDown="SquareClicked"/>
+        <Image x:Name="Square3" HorizontalAlignment="Left" Height="125" Margin="16,151,0,0" VerticalAlignment="Top" Width="125" Tag="3" IsEnabled="True" MouseLeftButtonDown="SquareClicked"/>
+        <Image x:Name="Square4" HorizontalAlignment="Left" Height="125" Margin="152,151,0,0" VerticalAlignment="Top" Width="125" Tag="4" IsEnabled="True" MouseLeftButtonDown="SquareClicked"/>
+        <Image x:Name="Square5" HorizontalAlignment="Left" Height="125" Margin="288,151,0,0" VerticalAlignment="Top" Width="125" Tag="5" IsEnabled="True" MouseLeftButtonDown="SquareClicked"/>
+        <Image x:Name="Square6" HorizontalAlignment="Left" Height="125" Margin="16,288,0,0" VerticalAlignment="Top" Width="125" Tag="6" IsEnabled="True" MouseLeftButtonDown="SquareClicked"/>
+        <Image x:Name="Square7" HorizontalAlignment="Left" Height="125" Margin="152,288,0,0" VerticalAlignment="Top" Width="125" Tag="7" IsEnabled="True" MouseLeftButtonDown="SquareClicked"/>
+        <Image x:Name="Square8" HorizontalAlignment="Left" Height="125" Margin="288,288,0,0" VerticalAlignment="Top" Width="125" Tag="8" IsEnabled="True" MouseLeftButtonDown="SquareClicked"/>
+        <TextBox x:Name="StatusText" HorizontalAlignment="Left" Margin="497,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="18"/>
+        <Button x:Name="NewGameButton" HorizontalAlignment="Left" Margin="497,92,0,0" VerticalAlignment="Top" Width="120" Cursor="Hand" MouseEnter="NewGame_MouseEnter" MouseLeave="NewGame_MouseLeave" Content="New Game"/>
 
     </Grid>
 </Window>
