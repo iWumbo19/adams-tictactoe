@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Threading;
 
 namespace SassyTicTacToe
 {
@@ -24,36 +25,53 @@ namespace SassyTicTacToe
         public MainWindow()
         {
             InitializeComponent();
-            GameGridImage.Source = ImageControls.ByteToImage(Properties.Resources.GameGrid);
+            InitializeAssets();
             Board.SetupBoard();
+            Board.AdamPlays = TileType.O;
             UpdateBoard();
+            Adam.window = this;
         }
 
+
+        /// <summary>
+        /// Main event for when a user clicks on the image box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SquareClicked(object sender, MouseButtonEventArgs e)
         {
-            byte index = Convert.ToByte(int.Parse((string)((Image)sender).Tag));
+            byte index = RetrieveTag(sender);
             if (!Board.GameComplete)
             {
-                if (Board.Squares[index].Tile == null)
+                if (Board.IsSquareNull(index))
                 {
-                    if (Board.WhoseMove == TileType.X) { Board.Squares[index].Tile = new Tile(TileType.X); }
-                    else { Board.Squares[index].Tile = new Tile(TileType.O); }
+                    Board.PlaceTile(index);
                     UpdateBoard();
-                    Board.WhoseMove = Board.WhoseMove == TileType.X ? TileType.O : TileType.X;
-                    var status = CheckForWin();
-                    if (status.Item1)
+                    Board.ToggleTurn();
+                    if (Board.CheckForWin().Item1) //If there is a winner
                     {
-                        StatusText.Text = status.Item2 == TileType.X ? "Xs Win!" : "Os Win!";
+                        StatusText.Text = WinMessage();
                         Board.GameComplete = true;
                     }
+                    else if (Board.AdamPlays == Board.WhoseMove) //If it's the AIs turn to play
+                    {
+                        Adam.AnalyzeBoard(); //Also Plays Move
+                        Board.ToggleTurn();
+                        UpdateBoard();
+                    }
                 }
-                else
+                else //Player clicked on space with a tile
                 {
                     StatusText.Text = @"Try This... https://en.wikipedia.org/wiki/Tic-tac-toe";
                 } 
             }
         }
 
+
+
+        /// <summary>
+        /// Changes the ImageSource of image boxes if their values have changed
+        /// </summary>
         internal void UpdateBoard()
         {
             Square0.Source = ImageControls.RetrieveImage(Board.Squares[0]);
@@ -67,34 +85,6 @@ namespace SassyTicTacToe
             Square8.Source = ImageControls.RetrieveImage(Board.Squares[8]);
         }
 
-        internal Tuple<bool,TileType> CheckForWin()
-        {
-            bool win = false;
-            TileType winner = TileType.X;
-            
-            if (IsWin(Board.Squares[0], Board.Squares[3], Board.Squares[6])) { win = true; winner = Board.Squares[0].Tile.TileType; }
-            if (IsWin(Board.Squares[1], Board.Squares[4], Board.Squares[7])) { win = true; winner = Board.Squares[1].Tile.TileType; }
-            if (IsWin(Board.Squares[2], Board.Squares[5], Board.Squares[8])) { win = true; winner = Board.Squares[2].Tile.TileType; }
-            if (IsWin(Board.Squares[0], Board.Squares[1], Board.Squares[2])) { win = true; winner = Board.Squares[0].Tile.TileType; }
-            if (IsWin(Board.Squares[3], Board.Squares[4], Board.Squares[5])) { win = true; winner = Board.Squares[3].Tile.TileType; }
-            if (IsWin(Board.Squares[6], Board.Squares[6], Board.Squares[8])) { win = true; winner = Board.Squares[6].Tile.TileType; }
-            if (IsWin(Board.Squares[0], Board.Squares[4], Board.Squares[8])) { win = true; winner = Board.Squares[0].Tile.TileType; }
-            if (IsWin(Board.Squares[2], Board.Squares[4], Board.Squares[6])) { win = true; winner = Board.Squares[2].Tile.TileType; }
-
-            return new Tuple<bool, TileType>(win, winner);
-        }
-
-        internal bool IsWin(Square square1, Square square2, Square square3)
-        {
-            if (square1.Tile == null) { return false; }
-            if (square2.Tile == null) { return false; }
-            if (square3.Tile == null) { return false; }
-
-            if (square2.Tile.TileType == square1.Tile.TileType &&
-                square3.Tile.TileType == square2.Tile.TileType)
-                return true;
-            else { return false; }
-        }
 
         private void NewGame_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -105,6 +95,39 @@ namespace SassyTicTacToe
         private void NewGame_MouseLeave(object sender, MouseEventArgs e)
         {
             NewGameButton.Content = "New Game";
+        }
+
+        private void NewGame_Click(object sender, RoutedEventArgs e)
+        {
+            StatusText.Text = "";
+            Board.SetupBoard();
+            UpdateBoard();
+        }
+
+        private void InitializeAssets()
+        {
+            GameGridImage.Source = ImageControls.ByteToImage(Properties.Resources.GameGrid);
+
+        }
+
+
+        /// <summary>
+        /// Used for Grabbing the win message based on current board
+        /// </summary>
+        /// <returns>Returns string based on the winner of the current board</returns>
+        private static string WinMessage()
+        {
+            return Board.CheckForWin().Item2 == TileType.X ? "Xs Win!" : "Os Win!";
+        }
+
+        public void ChangeMessage(string message)
+        {
+            StatusText.Text = message;
+        }
+
+        private byte RetrieveTag(object sender)
+        {
+            return Convert.ToByte(int.Parse((string)((Image)sender).Tag));
         }
     }
 }

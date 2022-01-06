@@ -6,6 +6,11 @@ namespace SassyTicTacToe
 {
     class ImageControls
     {
+        /// <summary>
+        /// Used to grab image data from properties. Helper method ByteToImage
+        /// </summary>
+        /// <param name="square"></param>
+        /// <returns>the ImageSource object needed to display Tiles based on Square passed in</returns>
         internal static ImageSource RetrieveImage(Square square)
         {
             if (square.Tile == null) { return ByteToImage(Properties.Resources.Empty); }
