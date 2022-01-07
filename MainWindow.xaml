@@ -19,6 +19,7 @@
         <Image x:Name="Square8" HorizontalAlignment="Left" Height="125" Margin="288,288,0,0" VerticalAlignment="Top" Width="125" Tag="8" IsEnabled="True" MouseLeftButtonDown="SquareClicked"/>
         <TextBox x:Name="StatusText" HorizontalAlignment="Left" Margin="444,55,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="293" Height="18"/>
         <Button x:Name="NewGameButton" HorizontalAlignment="Left" Margin="444,92,0,0" VerticalAlignment="Top" Width="120" Cursor="Hand" MouseEnter="NewGame_MouseEnter" MouseLeave="NewGame_MouseLeave" Content="New Game" Click="NewGame_Click"/>
+        <Label x:Name="AdamPlaysLabel" Content="Adam Plays: Os" HorizontalAlignment="Left" Margin="444,133,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

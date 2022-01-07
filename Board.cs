@@ -20,6 +20,8 @@ namespace SassyTicTacToe
         internal static int AdamWins;
         internal static TileType AdamPlays;
         internal static byte TilesPlaced;
+        internal static List<byte> XTiles = new List<byte>();
+        internal static List<byte> OTiles = new List<byte>();
         #endregion
 
 
@@ -44,6 +46,15 @@ namespace SassyTicTacToe
             if (IsWin(Board.Squares[2], Board.Squares[4], Board.Squares[6])) { win = true; winner = Board.Squares[2].Tile.TileType; }
 
             return new Tuple<bool, TileType>(win, winner);
+        }
+
+        internal static bool CheckForTie()
+        {
+            foreach (Square square in Squares)
+            {
+                if (square.Tile == null) { return false; }
+            }
+            return true;
         }
 
 
@@ -75,8 +86,10 @@ namespace SassyTicTacToe
             Squares = new Square[16];
             GameComplete = false;
             WhoseMove = TileType.X;
-            ToggleAdamPlays();
+            //ToggleAdamPlays();
             TilesPlaced = 0;
+            XTiles.Clear();
+            OTiles.Clear();
         }
 
 
@@ -109,8 +122,8 @@ namespace SassyTicTacToe
         /// <param name="index">Place tile at this index</param>
         internal static void PlaceTile(byte index)
         {
-            if (WhoseMove == TileType.X) { Squares[index].Tile = new Tile(TileType.X); }
-            else { Squares[index].Tile = new Tile(TileType.O); }
+            if (WhoseMove == TileType.X) { Squares[index].Tile = new Tile(TileType.X); XTiles.Add(index); }
+            else { Squares[index].Tile = new Tile(TileType.O); OTiles.Add(index); }
             TilesPlaced++;
         }
 
@@ -122,7 +135,7 @@ namespace SassyTicTacToe
 
         internal static void ToggleAdamPlays()
         {
-            AdamPlays = AdamPlays == TileType.X ? TileType.O : TileType.O;
+            AdamPlays = AdamPlays == TileType.X ? TileType.O : TileType.X;
         }
         #endregion
     }
