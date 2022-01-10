@@ -26,13 +26,14 @@ namespace SassyTicTacToe
         {
             InitializeComponent();
             InitializeAssets();
-            Board.AdamPlays = TileType.X;
+            Board.AdamPlays = TileType.O;
             Board.SetupBoard();
-            UpdateBoard();
             Adam.window = this;
+            Board.window = this;
             Adam.AnalyzeBoard();
             Board.ToggleTurn();
             UpdateBoard();
+            ChangeMessage("Hi I'm Adam! Ready for some relaxing Tic-Tac-Toe?");
         }
 
 
@@ -53,34 +54,39 @@ namespace SassyTicTacToe
                     Board.ToggleTurn();
                     if (Board.CheckForWin().Item1) //If there is a winner
                     {
-                        StatusText.Text = WinMessage();
+                        Adam.TalkTrash(TrashTalk.Lose);
+                        Board.PlayerWins++;
                         Board.GameComplete = true;
                     }
                     else if (Board.CheckForTie())
                     {
-                        ChangeMessage("It's a tie...");
+                        Adam.TalkTrash(TrashTalk.Draw);
+                        Board.Draws++;
                         Board.GameComplete = true;
                     }
                     else if (Board.AdamPlays == Board.WhoseMove) //If it's the AIs turn to play
                     {
                         Adam.AnalyzeBoard(); //Also Plays Move
+                        Adam.TalkTrash(TrashTalk.PlaceTile);
                         Board.ToggleTurn();
                         UpdateBoard();
                         if (Board.CheckForWin().Item1) //If there is a winner
                         {
-                            StatusText.Text = WinMessage();
+                            Adam.TalkTrash(TrashTalk.Win);
+                            Board.AdamWins++;
                             Board.GameComplete = true;
                         }
                         else if (Board.CheckForTie())
                         {
-                            ChangeMessage("It's a tie...");
+                            Adam.TalkTrash(TrashTalk.Draw);
+                            Board.Draws++;
                             Board.GameComplete = true;
                         }
                     }
                 }
                 else //Player clicked on space with a tile
                 {
-                    StatusText.Text = @"Try This... https://en.wikipedia.org/wiki/Tic-tac-toe";
+                    StatusText.Text = @"Do you understand this game??";
                 } 
             }
         }
@@ -101,6 +107,10 @@ namespace SassyTicTacToe
             Square6.Source = ImageControls.RetrieveImage(Board.Squares[6]);
             Square7.Source = ImageControls.RetrieveImage(Board.Squares[7]);
             Square8.Source = ImageControls.RetrieveImage(Board.Squares[8]);
+            AdamPlaysMessage(Board.AdamPlays);
+            AdamWinsUpdate(Board.AdamWins);
+            PlayerWinsUpdate(Board.PlayerWins);
+            DrawUpdate(Board.Draws);
         }
 
 
@@ -120,12 +130,12 @@ namespace SassyTicTacToe
             StatusText.Text = "";
             Board.SetupBoard();
             UpdateBoard();
-            AdamPlaysMessage(Board.AdamPlays);
             if (Board.AdamPlays == Board.WhoseMove)
             {
                 Adam.AnalyzeBoard(); //Also Plays Move
                 Board.ToggleTurn();
                 UpdateBoard();
+                Adam.TalkTrash(TrashTalk.NewGame);
             }
             
         }
@@ -137,15 +147,6 @@ namespace SassyTicTacToe
         }
 
 
-        /// <summary>
-        /// Used for Grabbing the win message based on current board
-        /// </summary>
-        /// <returns>Returns string based on the winner of the current board</returns>
-        private static string WinMessage()
-        {
-            return Board.CheckForWin().Item2 == TileType.X ? "Xs Win!" : "Os Win!";
-        }
-
 
         internal void ChangeMessage(string message)
         {
@@ -156,7 +157,19 @@ namespace SassyTicTacToe
         {
             AdamPlaysLabel.Content = type == TileType.O ? "Adam Plays: Os" : "Adam Plays: Xs";
         }
+        internal void AdamWinsUpdate(int wins)
+        {
+            AdamWinCounter.Content = $"Adam Wins: {wins}";
+        }
+        internal void PlayerWinsUpdate(int wins)
+        {
+            PlayerWinCounter.Content = $"Player Wins: {wins}";
+        }
 
+        private void DrawUpdate(int draws)
+        {
+            DrawsLabel.Content = $"Draws: {draws}";
+        }
         private byte RetrieveTag(object sender)
         {
             return Convert.ToByte(int.Parse((string)((Image)sender).Tag));

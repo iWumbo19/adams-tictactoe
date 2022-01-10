@@ -18,10 +18,13 @@ namespace SassyTicTacToe
         internal static int OWins;
         internal static int PlayerWins;
         internal static int AdamWins;
+        internal static int Draws;
         internal static TileType AdamPlays;
         internal static byte TilesPlaced;
         internal static List<byte> XTiles = new List<byte>();
         internal static List<byte> OTiles = new List<byte>();
+        internal static MainWindow window;
+        internal static TileType Winner;
         #endregion
 
 
@@ -39,9 +42,11 @@ namespace SassyTicTacToe
             if (IsWin(Board.Squares[0], Board.Squares[3], Board.Squares[6])) { win = true; winner = Board.Squares[0].Tile.TileType; }
             if (IsWin(Board.Squares[1], Board.Squares[4], Board.Squares[7])) { win = true; winner = Board.Squares[1].Tile.TileType; }
             if (IsWin(Board.Squares[2], Board.Squares[5], Board.Squares[8])) { win = true; winner = Board.Squares[2].Tile.TileType; }
+
             if (IsWin(Board.Squares[0], Board.Squares[1], Board.Squares[2])) { win = true; winner = Board.Squares[0].Tile.TileType; }
             if (IsWin(Board.Squares[3], Board.Squares[4], Board.Squares[5])) { win = true; winner = Board.Squares[3].Tile.TileType; }
-            if (IsWin(Board.Squares[6], Board.Squares[6], Board.Squares[8])) { win = true; winner = Board.Squares[6].Tile.TileType; }
+            if (IsWin(Board.Squares[6], Board.Squares[7], Board.Squares[8])) { win = true; winner = Board.Squares[6].Tile.TileType; }
+
             if (IsWin(Board.Squares[0], Board.Squares[4], Board.Squares[8])) { win = true; winner = Board.Squares[0].Tile.TileType; }
             if (IsWin(Board.Squares[2], Board.Squares[4], Board.Squares[6])) { win = true; winner = Board.Squares[2].Tile.TileType; }
 
@@ -50,9 +55,9 @@ namespace SassyTicTacToe
 
         internal static bool CheckForTie()
         {
-            foreach (Square square in Squares)
+            for (byte i = 0; i < 9; i++)
             {
-                if (square.Tile == null) { return false; }
+                if (Squares[i].Tile == null) { return false; }
             }
             return true;
         }
@@ -86,7 +91,7 @@ namespace SassyTicTacToe
             Squares = new Square[16];
             GameComplete = false;
             WhoseMove = TileType.X;
-            //ToggleAdamPlays();
+            ToggleAdamPlays();
             TilesPlaced = 0;
             XTiles.Clear();
             OTiles.Clear();
@@ -144,6 +149,7 @@ namespace SassyTicTacToe
     {
         X,
         O,
-        Tie
+        Tie,
+        Null
     }
 }
